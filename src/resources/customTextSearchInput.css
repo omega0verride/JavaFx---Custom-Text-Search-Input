@@ -1,0 +1,89 @@
+#textField{
+    -fx-text-fill: white;
+    -fx-padding: 6px 0px 6px 2px;
+    -fx-background-color: #303030;
+    -fx-border-color: #b1b1b1;
+    -fx-font-size: 14;
+}
+
+#textField:focused{
+    -fx-background-color: #3c3c3c;
+    -fx-border-color: #007ed0;
+}
+
+#textField:hover{
+    -fx-cursor: hand;
+}
+
+.check-box{
+  -fx-padding: 0;
+}
+
+.check-box>.box {
+  -fx-background-insets: 0;
+  -fx-background-radius: 5;
+  -fx-background-color: transparent;
+  -fx-border-style: none;
+  -fx-border-color:transparent;
+}
+
+.check-box:hover >.box {
+  -fx-background-radius: 5;
+  -fx-background-insets: 0;
+  -fx-background-color: grey;
+  -fx-border-style: none;
+  -fx-border-color:transparent; 
+}
+
+.check-box:selected >.box {
+  -fx-background-radius: 5;
+  -fx-border-style: none;
+  -fx-border-color:transparent;
+}
+
+.check-box:selected:hover >.box {
+  -fx-background-insets: 0;
+  -fx-background-radius: 5;
+  -fx-background-color: grey;
+  -fx-border-style: none;
+  -fx-border-color:transparent;
+}
+
+#check-box-caseSensitiveCheckbox>.box>.mark {
+  -fx-padding: 8 10;
+  -fx-background-image: url("images/case_sensitive_icon_gray.png");
+  -fx-background-position: center;
+  -fx-background-repeat: stretch;
+  -fx-shape: none;
+}
+
+#check-box-caseSensitiveCheckbox:selected>.box>.mark{
+  -fx-background-color: transparent;
+  -fx-background-image: url("images/case_sensitive_icon_white.png");
+}
+
+#check-box-isWordCheckbox>.box>.mark {
+  -fx-padding: 8 10;
+  -fx-background-image: url("images/match_whole_word_icon_grey.png");
+  -fx-background-position: center;
+  -fx-background-repeat: stretch;
+  -fx-shape: none;
+}
+
+#check-box-isWordCheckbox:selected>.box>.mark{
+  -fx-background-color: transparent;
+  -fx-background-image: url("images/match_whole_word_icon_white.png");
+}
+
+#check-box-regexCheckbox>.box>.mark {
+  -fx-padding: 8 10;
+  -fx-background-image: url("images/regex_icon_white.png");
+  -fx-background-position: center;
+  -fx-background-repeat: stretch;
+  -fx-shape: none;
+}
+
+#check-box-regexCheckbox:selected>.box>.mark{
+  -fx-background-color: transparent;
+  -fx-background-image: url("images/regex_icon_white.png");
+}
