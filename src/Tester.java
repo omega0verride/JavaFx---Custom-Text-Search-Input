@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import jfxtras.styles.jmetro.JMetro;
@@ -39,6 +40,15 @@ public class Tester extends Application {
                     }
                 }
         );
+
+        input.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                System.out.println("text: "+input.getText());
+                System.out.println("casesensitive: "+input.isCaseSensitive()+", wholeWord: "+input.isWholeWord()+", regex: "+input.isRegex());
+                input.clear();
+            }
+        });
+
         input.setMaxWidth(250);
 
         root.getChildren().add(input);
