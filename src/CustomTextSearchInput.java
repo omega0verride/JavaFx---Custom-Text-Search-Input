@@ -4,6 +4,7 @@ import javafx.event.EventTarget;
 import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.MouseEvent;
@@ -11,9 +12,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import org.controlsfx.control.textfield.CustomTextField;
 
+import java.util.ArrayList;
+
 
 public class CustomTextSearchInput extends CustomTextField {
-    public static EventType<CustomTextSearchInputEvent> SELECTION_CHANGED = new EventType<>("SELECTION_CHANGED");
+    public static EventType<CustomTextSearchInputEvent> TEXT_SEARCH_TYPE_CHANGED = new EventType<>("TEXT_SEARCH_TYPE_CHANGED");
+    public static EventType<CustomTextSearchInputEvent> FOCUS_REMOVED = new EventType<>("FOCUS_REMOVED");
     Scene scene;
     private final CheckBox caseSensitiveCheckbox;
 
@@ -22,9 +26,14 @@ public class CustomTextSearchInput extends CustomTextField {
     private final CheckBox regexCheckbox;
 
     public CustomTextSearchInput(Scene scene) {
+        this(scene, "");
+    }
+
+    public CustomTextSearchInput(Scene scene, String value) {
         super();
         this.scene = scene;
-        setId("textField");
+        this.setText(value);
+        setId("CustomTextSearchInput");
 
         caseSensitiveCheckbox = new CheckBox();
         caseSensitiveCheckbox.setFocusTraversable(false);
@@ -32,6 +41,7 @@ public class CustomTextSearchInput extends CustomTextField {
         caseSensitiveCheckbox.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                requestFocus();
                 emitChange();
             }
         });
@@ -43,6 +53,7 @@ public class CustomTextSearchInput extends CustomTextField {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 regexCheckbox.setSelected(false);
+                requestFocus();
                 emitChange();
             }
         });
@@ -54,6 +65,7 @@ public class CustomTextSearchInput extends CustomTextField {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 isWordCheckbox.setSelected(false);
+                requestFocus();
                 emitChange();
             }
         });
@@ -69,31 +81,68 @@ public class CustomTextSearchInput extends CustomTextField {
     }
 
     public void emitChange() {
-        Event event = new CustomTextSearchInputEvent(SELECTION_CHANGED);
+        Event event = new CustomTextSearchInputEvent(TEXT_SEARCH_TYPE_CHANGED);
         this.fireEvent(event);
     }
 
-    private void addLooseFocusHandler() {
-        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            if (this.isFocused())
-                if (!targetIsFocusOwner(event.getTarget())) {
-                    getParent().requestFocus();
-                }
-        });
+    public void emitFocusRemoved() {
+        Event event = new CustomTextSearchInputEvent(FOCUS_REMOVED);
+        this.fireEvent(event);
     }
 
-    private boolean targetIsFocusOwner(EventTarget target) {
-        for (Node n : getChildrenUnmodifiable()) {
-            if (n.equals(target))
+    public boolean hasFocus() {
+        if (this.isFocused())
+            return true;
+        for (Node n : getChildren()) {
+            if (n.isFocused())
                 return true;
+        }
+        return false;
+    }
+
+    private boolean isPaneChildrenFocused(EventTarget target, Pane pane) {
+        for (Node n : pane.getChildren()) {
             if (n instanceof Pane) {
-                for (Node n1 : ((Pane) n).getChildren())
-                    if (n1.equals(target))
-                        return true;
+                isPaneChildrenFocused(target, (Pane) n);
+            }
+            if (n.equals(target)) {
+                return true;
             }
         }
         return false;
     }
+
+    private boolean targetIsFocusOwner(EventTarget target) {
+        for (Node n : getAllNodes(this))
+            if ((n.isFocused() || isFocused()) && n.equals(target))
+                return true;
+        return false;
+    }
+
+    public static ArrayList<Node> getAllNodes(Parent root) {
+        ArrayList<Node> nodes = new ArrayList<Node>();
+        addAllDescendents(root, nodes);
+        return nodes;
+    }
+
+    private static void addAllDescendents(Parent parent, ArrayList<Node> nodes) {
+        for (Node node : parent.getChildrenUnmodifiable()) {
+            nodes.add(node);
+            if (node instanceof Parent)
+                addAllDescendents((Parent)node, nodes);
+        }
+    }
+
+    private void addLooseFocusHandler() {
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+
+            if (!targetIsFocusOwner(event.getTarget())) {
+                emitFocusRemoved();
+                getParent().requestFocus();
+            }
+        });
+    }
+
 
     public boolean isCaseSensitive() {
         return this.caseSensitiveCheckbox.isSelected();

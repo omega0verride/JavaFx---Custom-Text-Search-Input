@@ -1,4 +1,4 @@
-#textField{
+#CustomTextSearchInput{
     -fx-text-fill: white;
     -fx-padding: 6px 0px 6px 2px;
     -fx-background-color: #303030;
@@ -6,12 +6,12 @@
     -fx-font-size: 14;
 }
 
-#textField:focused{
+#CustomTextSearchInput:focused{
     -fx-background-color: #3c3c3c;
     -fx-border-color: #007ed0;
 }
 
-#textField:hover{
+#CustomTextSearchInput:hover{
     -fx-cursor: hand;
 }
 
@@ -32,7 +32,7 @@
   -fx-background-insets: 0;
   -fx-background-color: grey;
   -fx-border-style: none;
-  -fx-border-color:transparent; 
+  -fx-border-color:transparent;
 }
 
 .check-box:selected >.box {
